@@ -1,101 +1,133 @@
-import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import React from "react";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import {
   Paper,
   Grid,
-  FormLabel,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  FormHelperText,
-  Checkbox,
-  TextField,
-  Typography,
-} from '@material-ui/core'
+  Stepper,
+  Step,
+  StepLabel,
+  Button,
+  Typography
+} from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-    },
-    formControl: {
-      margin: theme.spacing(3),
-    },
-  }),
-);
+import ScreenplayDetailForm from './ScreenplayDetailForm' 
+import CharacterForm from './CharacterForm' 
+import SourceForm from './SourceForm' 
+
+const useStyles = makeStyles((theme: Theme) => ({
+  layout: {
+    width: "auto",
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
+      width: 600,
+      marginLeft: "auto",
+      marginRight: "auto"
+    }
+  },
+  paper: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(2),
+    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+      marginTop: theme.spacing(6),
+      marginBottom: theme.spacing(6),
+      padding: theme.spacing(3)
+    }
+  },
+  stepper: {
+    padding: theme.spacing(3, 0, 5)
+  },
+  buttons: {
+    display: "flex",
+    justifyContent: "flex-end"
+  },
+  button: {
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1)
+  },
+  formControl: {
+    margin: theme.spacing(3),
+    padding: theme.spacing(3)
+  },
+  textField: {
+    margin: "dense"
+  }
+}));
+
+const steps = ['Details', 'Characters', 'Sources'];
+
+function getStepContent(step: number) {
+  switch (step) {
+    case 0:
+      return <ScreenplayDetailForm />;
+    case 1:
+      return <CharacterForm />;
+    case 2:
+      return <SourceForm />;
+    default:
+      throw new Error('Unknown step');
+  }
+}
 
 const CheckboxesGroup: React.FC = () => {
   const classes = useStyles();
-  const [state, setState] = React.useState({
-    gilad: true,
-    jason: false,
-    antoine: false,
-  });
-
-  const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, [name]: event.target.checked });
-  };
-
-  const { gilad, jason, antoine } = state;
-  const error = [gilad, jason, antoine].filter(v => v).length !== 2;
+  const [activeStep, setActiveStep] = React.useState(0);
+  const handleNext = () => setActiveStep(activeStep + 1)
+  const handleBack = () => setActiveStep(activeStep - 1)
 
   return (
-    <Grid container alignItems="center" justify="center">
-      <Paper>
-        <Typography variant="h5" gutterBottom>
-          Generate a Screenplay
-        </Typography>    
-        <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">Screenplay Details</FormLabel>
-         <FormGroup>
-           <TextField id="title" label="Title" fullWidth />
-           <TextField id="screenwriter" label="Screenwriter" fullWidth />
-         </FormGroup>
-
-        </FormControl>
-        <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">Assign responsibility</FormLabel>
-          <FormGroup>
-            <FormControlLabel
-              control={<Checkbox checked={gilad} onChange={handleChange('gilad')} value="gilad" />}
-              label="Gilad Gray"
-            />
-            <FormControlLabel
-              control={<Checkbox checked={jason} onChange={handleChange('jason')} value="jason" />}
-              label="Jason Killian"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={antoine} onChange={handleChange('antoine')} value="antoine" />
-              }
-              label="Antoine Llorca"
-            />
-          </FormGroup>
-          <FormHelperText>Be careful</FormHelperText>
-        </FormControl>
-        <FormControl required error={error} component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">Pick two</FormLabel>
-          <FormGroup>
-            <FormControlLabel
-              control={<Checkbox checked={gilad} onChange={handleChange('gilad')} value="gilad" />}
-              label="Gilad Gray"
-            />
-            <FormControlLabel
-              control={<Checkbox checked={jason} onChange={handleChange('jason')} value="jason" />}
-              label="Jason Killian"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={antoine} onChange={handleChange('antoine')} value="antoine" />
-              }
-              label="Antoine Llorca"
-            />
-          </FormGroup>
-          <FormHelperText>You can display an error</FormHelperText>
-        </FormControl>
-      </Paper>
-    </Grid>
+     <main className={classes.layout}>
+        <Paper className={classes.paper}>
+          <Typography component="h1" variant="h4" align="center">
+            Screenplay Generator
+          </Typography>
+          <Stepper activeStep={activeStep} className={classes.stepper}>
+            {steps.map(label => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper> 
+          <React.Fragment>
+            {activeStep === steps.length ? (
+              <React.Fragment>
+                <Typography variant="h5" gutterBottom>
+                  Generating your screenplay...
+                </Typography>
+                <Typography variant="subtitle1">
+                  D.A.V.E. is busy writing your screenplay. We will notify you when your files are ready.
+                </Typography>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {getStepContent(activeStep)}
+                <div className={classes.buttons}>
+                  {activeStep !== 0 && (
+                    <Button 
+                      variant='contained'
+                      color='secondary'
+                      onClick={handleBack} 
+                      className={classes.button}
+                    >
+                      Back
+                    </Button>
+                  )}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    className={classes.button}
+                  >
+                    {activeStep === steps.length - 1 ? 'Generate' : 'Next'}
+                  </Button>
+                </div>
+              </React.Fragment>
+            )}
+          </React.Fragment>                 
+        </Paper>
+      </main>
   );
-}
+};
 
-export default CheckboxesGroup
+export default CheckboxesGroup;
