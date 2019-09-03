@@ -7,5 +7,6 @@ from . import views
 app_name = 'gen'
 urlpatterns = [
     path('screenwrite/', views.screenwrite, name='screenwrite'),
+    path('api/sources/', views.source_screenplays, name='source_material'),
     re_path('.*', TemplateView.as_view(template_name='index.html'), name='client'),
 ]

@@ -70,7 +70,7 @@ function getStepContent(step: number) {
   }
 }
 
-const CheckboxesGroup: React.FC = () => {
+const ScreenplayForm: React.FC = () => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const handleNext = () => setActiveStep(activeStep + 1)
@@ -130,4 +130,4 @@ const CheckboxesGroup: React.FC = () => {
   );
 };
 
-export default CheckboxesGroup;
+export default ScreenplayForm;
