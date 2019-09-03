@@ -1,17 +1,20 @@
 // CharacterForm.tsx
-import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React, {
+  ChangeEvent,
+  FormEvent,
+} from 'react';
 import {
-  FormLabel,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  FormHelperText,
-  TextField,  
+  Grid,
+  TextField,
+  InputAdornment,
+  IconButton,  
   Typography,
   Chip, 
   Paper
 } from '@material-ui/core'
+import AddIcon from '@material-ui/icons/Add'
+import DeleteIcon from '@material-ui/icons/Delete';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,61 +30,84 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface ChipData {
+interface CharacterChip {
   key: number;
   label: string;
 }
 
-interface ChipProps {
-  chipData: ChipData[], 
-  handleDelete: (chipsToDelete: ChipData) => any // fix
+interface CharacterChipProps {
+  chipList: CharacterChip[], 
+  handleDelete: (chipsToDelete: CharacterChip) => any
 }
 
-const ChipsArray = (props: ChipProps) => {
-  const classes = useStyles();
+const CharacterChips = ({chipList, handleDelete}: CharacterChipProps) => {
   return (
-    <Paper className={classes.root}>
-      {props.chipData.map((data: ChipData) => {
-        return (
+    <Paper>
+      {chipList.map((chip: CharacterChip) => (
           <Chip
-            key={data.key}
-            label={data.label}
-            onDelete={props.handleDelete(data)}
-            className={classes.chip}
+            key={chip.key}
+            label={chip.label}
+            onDelete={handleDelete(chip)}
           />
-        );
-      })}
+        )
+      )}
     </Paper>
   );
 }
 
-
 const CharacterForm: React.FC = () => {
-  const [chipData, setChipData] = React.useState<ChipData[]>([
-    { key: 0, label: 'Angular' },
-    { key: 1, label: 'jQuery' },
-    { key: 2, label: 'Polymer' },
-    { key: 3, label: 'React' },
-    { key: 4, label: 'Vue.js' },
+  const [chips, setChips] = React.useState<CharacterChip[]>([
+    {key: 0, label: 'test'},
+    {key: 1, label: 'one'},
+    {key: 2, label: 'two'},
   ]);
+  const [character, setCharacter] = React.useState<string>('');
 
-  const handleDelete = (chipToDelete: ChipData) => () => {
-    setChipData(chips => chips.filter(chip => chip.key !== chipToDelete.key));
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setCharacter(event.currentTarget.value)
+  }
+
+  const handleAdd = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault()
+    const chip: CharacterChip = {key: chips.length, label: character}
+    console.log(chips, chip, [...chips, chip])
+    setChips(chipList => [...chipList, chip])
+    console.log(chips)
+    setCharacter('')
+  }
+
+  const handleDelete = (chipToDelete: CharacterChip): void => {
+    setChips(chips => chips.filter(chip => chip.key !== chipToDelete.key));
   };
 
   return (
     <React.Fragment>
-      <FormControl component="fieldset">  
-        <FormGroup>
-          <TextField id="characters" label="Characters" />
-        </FormGroup>
-      </FormControl>
-      {chipData && 
-        <ChipsArray 
-          chipData={chipData}
+      <Typography variant="h5" align="center" gutterBottom>
+        Add characters
+      </Typography>
+        <form onSubmit={handleAdd}>     
+            <TextField 
+              id="character" 
+              name='character'
+              label="Characters" 
+              value={character}
+              onChange={handleChange}
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton type='submit' aria-label="add">
+                      <AddIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}              
+            />
+        </form>
+        <CharacterChips 
+          chipList={chips}
           handleDelete={handleDelete}
         />
-      }
     </React.Fragment>
   )
 }
