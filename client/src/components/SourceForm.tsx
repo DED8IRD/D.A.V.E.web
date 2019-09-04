@@ -20,12 +20,11 @@ interface Film {
 }
 
 interface Genre {
-  genre: string,
-  films: Film[]
+  [key: string]: Film[]
 }
 
 const SourceForm: React.FC = (props: any) => {
-  const [films, setFilms] = React.useState<Genre[]>([])
+  const [films, setFilms] = React.useState<Genre>({})
   const getFilms = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/sources/')
@@ -35,27 +34,26 @@ const SourceForm: React.FC = (props: any) => {
     }
   }
   React.useEffect(() => {
-    if (films.length === 0) getFilms()
+    if (Object.keys(films).length === 0) getFilms()
   })
 
   return (
     <React.Fragment>
-        {films.map(genre => {
-          console.log(genre)
+        {Object.keys(films).map((genre: string) => {
           return (
-            <FormControl>
-              <p>{genre.genre}</p>
+            <FormControl key={genre}>
+              <p>{genre}</p>
               {
-                genre.films.map(film => {
-                  return (
+                films[genre].map((film: Film) => (
                     <FormControlLabel
                       control={
                         <Checkbox value="checkedA" />
                       }
                       label={film.title}
+                      key={film.title}
                     />          
                   )
-                })
+                )
               }
             </FormControl>
           )

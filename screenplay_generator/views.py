@@ -16,21 +16,16 @@ def screenwrite(request):
 def source_screenplays(request):
     root = f'{settings.STATIC_URL}scraper/Genres'
     source = f'{settings.BASE_DIR}/{root}'
-    genres = []
+    genres = {}
     for genre_dir in os.listdir(source):
         genre_path = os.path.join(source, genre_dir)
-        genre = {
-            'genre': genre_dir,
-        }
         films = []
         for screenplay in os.listdir(genre_path):
-            name = screenplay.strip('.html')
+            name = screenplay[:-5]
             films.append({
                 'title': ' '.join(name.split('-')),
                 'path': f'{root}/{genre_dir}/{screenplay}',
                 'genre': genre_dir,
             })
-        genre['films'] = films
-        genres.append(genre)
-
-    return JsonResponse(genres, safe=False)
+        genres[genre_dir] = films
+    return JsonResponse(genres)
