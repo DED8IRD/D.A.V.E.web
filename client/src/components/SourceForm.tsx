@@ -18,21 +18,34 @@ import {
   Typography,
   Chip,
 } from "@material-ui/core";
+import {makeStyles, createStyles, Theme} from "@material-ui/core/styles"
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      padding: theme.spacing(0.5),
+    },
+    chip: {
+      margin: theme.spacing(0.5),
+    },
+  }),
+);
 
 interface Film {
-  title: string;
   path: string;
-  genre: string;
+  genre: string[];
 }
 
-interface Genre {
-  [key: string]: Film[];
+interface Films {
+  [key: string]: Film;
 }
 
 const SourceForm: React.FC = (props: any) => {
-  const [allFilms, setFilms] = useState<Genre>({})
+  const [films, setFilms] = useState<Films>({})
   const [query, setQuery] = useState<string>('')
-  const [searchResults, setSearchResults] = useState<Genre>({})
+  const [searchResults, setSearchResults] = useState<Films>({})
 
   const getFilms = async () => {
     try {
@@ -44,20 +57,17 @@ const SourceForm: React.FC = (props: any) => {
   };
 
   useEffect((): void => {
-    if (Object.keys(allFilms).length === 0) getFilms();
+    if (Object.keys(films).length === 0) getFilms();
   });
 
   const search = (query: string) => {
-    const results: Genre = {}
+    const results: Films = {} 
     if (query) {
-      for (const genre in allFilms) {
-        const films = allFilms[genre]
-        const match: Film[] = []
-        for (const film of films) {
-          const title = film.title.toLowerCase()
-          if (title.includes(query.toLowerCase())) match.push(film) 
-        }
-        results[genre] = match
+      for (const film in films) {
+        const title = film.toLowerCase()
+        if (title.includes(query.toLowerCase())) {
+          results[film] = films[film]
+        } 
       }
       setSearchResults(results)
     }
@@ -69,9 +79,11 @@ const SourceForm: React.FC = (props: any) => {
     console.log(query)
   }
 
+  const classes = useStyles()
+
   return (
     <React.Fragment>
-      <Paper>
+      <Paper className={classes.paper}>
         <Input 
           type='search'
           placeholder='Search films'
@@ -81,22 +93,22 @@ const SourceForm: React.FC = (props: any) => {
           fullWidth              
         />
       </Paper>
-      {Object.keys(searchResults).map((genre: string) => (
-        searchResults[genre].length ? (
-          <FormControl 
-            key={genre} 
-            fullWidth
-          >
-            <p>{genre}</p>
-            {searchResults[genre].map((film: Film) => (
-              <FormControlLabel
-                control={<Checkbox value="checkedA" />}
-                label={film.title}
-                key={film.title}
-              />
-            ))}
+      {Object.keys(searchResults).map((film: string) => (
+          <FormControl key={film} fullWidth>
+            <FormControlLabel
+              control={<Checkbox />}
+              label={film}
+            />
+            <Paper>
+              {searchResults[film].genre.map((genre, i) => (
+                <Chip
+                  key={i}
+                  label={genre}
+                  className={classes.chip}
+                />
+              ))}
+            </Paper>
           </FormControl>
-        ) : null
       ))}
     </React.Fragment>
   );
