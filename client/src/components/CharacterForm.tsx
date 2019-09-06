@@ -1,5 +1,6 @@
 // CharacterForm.tsx
 import React, {
+  useContext,  
   useState,
   ChangeEvent,
   FormEvent,
@@ -16,6 +17,7 @@ import {
 import AddIcon from '@material-ui/icons/Add'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {CharacterChipProps} from '../utils/types'
+import {ScreenplayFormContext} from '../utils/contexts'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,8 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const CharacterChipArray = ({chips, handleDelete}: CharacterChipProps) => {
+const CharacterChipArray: React.FC<CharacterChipProps> = ({chips, handleDelete}) => {
   const classes = useStyles();
+  const ctx = useContext(ScreenplayFormContext)
   return (
     <Paper className={classes.paper}>
       {chips.map((chip: string, i: number) => {
