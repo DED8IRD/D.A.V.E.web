@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Film {
+  title?: string;
   path: string;
   genre: string[];
 }
@@ -42,10 +43,20 @@ interface Films {
   [key: string]: Film;
 }
 
+interface SelectedFilm {
+  film: Film,
+  checked: boolean
+}
+
+interface SelectedFilms {
+  [key: string]: SelectedFilm
+}
+
 const SourceForm: React.FC = (props: any) => {
   const [films, setFilms] = useState<Films>({})
   const [query, setQuery] = useState<string>('')
   const [searchResults, setSearchResults] = useState<Films>({})
+  const [selected, setSelected] = useState<SelectedFilms>({})
 
   const getFilms = async () => {
     try {
@@ -79,6 +90,28 @@ const SourceForm: React.FC = (props: any) => {
     console.log(query)
   }
 
+  const handleDelete = (title: string) => () => {
+    const copy = {...selected}
+    delete copy[title]
+    setSelected(copy)    
+  };
+
+  const handleSelect = (event: ChangeEvent<HTMLInputElement>): void => {
+    const title: string = event.currentTarget.value
+    const checked = (selected[title] ? selected[title].checked : false) 
+    if (!checked) {
+      const film: SelectedFilm = {
+        film: {...searchResults[title], title},
+        checked: true
+      }
+      setSelected({...selected, [title]: film})
+    } else {
+      const copy = {...selected}
+      delete copy[title]
+      setSelected(copy)   
+    }
+  }
+
   const classes = useStyles()
 
   return (
@@ -93,20 +126,29 @@ const SourceForm: React.FC = (props: any) => {
           fullWidth              
         />
       </Paper>
+      <Paper className={classes.paper}>
+        {Object.keys(selected).map((title: string) => (
+          <Chip 
+            key={title}
+            label={title}
+            onDelete={handleDelete(title)}
+          />
+        ))}
+      </Paper>
       {Object.keys(searchResults).map((film: string) => (
           <FormControl key={film} fullWidth>
             <FormControlLabel
-              control={<Checkbox />}
+              control={
+                <Checkbox 
+                  checked={(selected[film] ? selected[film].checked : false)}
+                  onChange={handleSelect}
+                  value={film}
+                />
+              }
               label={film}
             />
             <Paper>
-              {searchResults[film].genre.map((genre, i) => (
-                <Chip
-                  key={i}
-                  label={genre}
-                  className={classes.chip}
-                />
-              ))}
+              {searchResults[film].genre.join(', ')}
             </Paper>
           </FormControl>
       ))}
