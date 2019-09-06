@@ -54,14 +54,14 @@ interface SelectedFilms {
 
 const SourceForm: React.FC = (props: any) => {
   const [films, setFilms] = useState<Films>({})
-  const [query, setQuery] = useState<string>('')
   const [searchResults, setSearchResults] = useState<Films>({})
   const [selected, setSelected] = useState<SelectedFilms>({})
+  const [error, setError] = useState<boolean>(false)
 
   const getFilms = async () => {
     try {
       const response = await axios.get("http://localhost:8000/api/sources/");
-      setFilms(response.data);
+      setFilms(films => response.data);
     } catch (err) {
       console.log(err);
     }
@@ -70,6 +70,11 @@ const SourceForm: React.FC = (props: any) => {
   useEffect((): void => {
     if (Object.keys(films).length === 0) getFilms();
   });
+
+  useEffect((): void => {
+    const size = Object.keys(selected).length
+    setError(err => 5 < size || size < 1)
+  })
 
   const search = (query: string) => {
     const results: Films = {} 
@@ -80,20 +85,18 @@ const SourceForm: React.FC = (props: any) => {
           results[film] = films[film]
         } 
       }
-      setSearchResults(results)
+      setSearchResults(searchResults => results)
     }
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setQuery(event.currentTarget.value)
-    search(query)
-    console.log(query)
+    search(event.currentTarget.value)
   }
 
   const handleDelete = (title: string) => () => {
     const copy = {...selected}
     delete copy[title]
-    setSelected(copy)    
+    setSelected(selected => copy) 
   };
 
   const handleSelect = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -104,11 +107,11 @@ const SourceForm: React.FC = (props: any) => {
         film: {...searchResults[title], title},
         checked: true
       }
-      setSelected({...selected, [title]: film})
+      setSelected(selected => ({...selected, [title]: film}))
     } else {
       const copy = {...selected}
       delete copy[title]
-      setSelected(copy)   
+      setSelected(selected => copy)   
     }
   }
 
@@ -121,7 +124,6 @@ const SourceForm: React.FC = (props: any) => {
           type='search'
           placeholder='Search films'
           inputProps={{ 'aria-label': 'search films' }}
-          value={query}
           onChange={handleChange}
           fullWidth              
         />
@@ -135,23 +137,31 @@ const SourceForm: React.FC = (props: any) => {
           />
         ))}
       </Paper>
-      {Object.keys(searchResults).map((film: string) => (
-          <FormControl key={film} fullWidth>
-            <FormControlLabel
-              control={
-                <Checkbox 
-                  checked={(selected[film] ? selected[film].checked : false)}
-                  onChange={handleSelect}
-                  value={film}
-                />
-              }
-              label={film}
-            />
-            <Paper>
-              {searchResults[film].genre.join(', ')}
-            </Paper>
-          </FormControl>
-      ))}
+      <FormControl 
+        error={error} 
+        component="fieldset"              
+        required
+        fullWidth
+      >
+        <FormHelperText>Choose from one to five screenplays.</FormHelperText>      
+        {Object.keys(searchResults).map((film: string) => (
+            <FormControl key={film} fullWidth>
+              <FormControlLabel
+                control={
+                  <Checkbox 
+                    checked={(selected[film] ? selected[film].checked : false)}
+                    onChange={handleSelect}
+                    value={film}
+                  />
+                }
+                label={film}
+              />
+              <Paper>
+                {searchResults[film].genre.join(', ')}
+              </Paper>
+            </FormControl>
+        ))}
+      </FormControl>
     </React.Fragment>
   );
 };
