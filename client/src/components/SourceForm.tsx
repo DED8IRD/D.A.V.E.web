@@ -19,6 +19,12 @@ import {
   Chip,
 } from "@material-ui/core";
 import {makeStyles, createStyles, Theme} from "@material-ui/core/styles"
+import {
+  Film,
+  Films,
+  SelectedFilm,
+  SelectedFilms
+} from './types'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,24 +39,6 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface Film {
-  title?: string;
-  path: string;
-  genre: string[];
-}
-
-interface Films {
-  [key: string]: Film;
-}
-
-interface SelectedFilm {
-  film: Film,
-  checked: boolean
-}
-
-interface SelectedFilms {
-  [key: string]: SelectedFilm
-}
 
 const SourceForm: React.FC = (props: any) => {
   const [films, setFilms] = useState<Films>({})
