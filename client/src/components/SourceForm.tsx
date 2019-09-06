@@ -19,12 +19,7 @@ import {
   Chip,
 } from "@material-ui/core";
 import {makeStyles, createStyles, Theme} from "@material-ui/core/styles"
-import {
-  Film,
-  Films,
-  SelectedFilm,
-  SelectedFilms
-} from '../utils/types'
+import { Film, Films } from '../utils/types'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const SourceForm: React.FC = (props: any) => {
   const [films, setFilms] = useState<Films>({})
   const [searchResults, setSearchResults] = useState<Films>({})
-  const [selected, setSelected] = useState<SelectedFilms>({})
+  const [selected, setSelected] = useState<Films>({})
   const [error, setError] = useState<boolean>(false)
 
   const getFilms = async () => {
@@ -89,12 +84,8 @@ const SourceForm: React.FC = (props: any) => {
 
   const handleSelect = (event: ChangeEvent<HTMLInputElement>): void => {
     const title: string = event.currentTarget.value
-    const checked = (selected[title] ? selected[title].checked : false) 
-    if (!checked) {
-      const film: SelectedFilm = {
-        film: {...searchResults[title], title},
-        checked: true
-      }
+    if (!selected[title]) {
+      const film: Film = {...searchResults[title], title}
       setSelected(selected => ({...selected, [title]: film}))
     } else {
       const copy = {...selected}
@@ -137,7 +128,7 @@ const SourceForm: React.FC = (props: any) => {
               <FormControlLabel
                 control={
                   <Checkbox 
-                    checked={(selected[film] ? selected[film].checked : false)}
+                    checked={Boolean(selected[film])}
                     onChange={handleSelect}
                     value={film}
                   />
