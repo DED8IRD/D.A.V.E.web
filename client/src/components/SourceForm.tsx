@@ -24,7 +24,7 @@ import {
   Films,
   SelectedFilm,
   SelectedFilms
-} from './types'
+} from '../utils/types'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

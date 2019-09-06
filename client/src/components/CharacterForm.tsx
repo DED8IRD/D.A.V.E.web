@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import {CharacterChipProps} from './types'
+import {CharacterChipProps} from '../utils/types'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
