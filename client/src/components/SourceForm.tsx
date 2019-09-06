@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const SourceForm: React.FC = (props: any) => {
+const SourceForm: React.FC = () => {
   const ctx = useContext(ScreenplayFormContext)
 
   const [films, setFilms] = useState<Films>({})

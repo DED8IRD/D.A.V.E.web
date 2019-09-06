@@ -1,14 +1,5 @@
 // TS Interfaces
 
-const initialForm = {
-  details: {
-    title: '',
-    screenwriter: '',
-  },
-  characters: [],
-  sources: {}
-}
-
 // CharacterForm
 export interface CharacterChipProps {
   chips: string[], 
@@ -32,9 +23,17 @@ interface ScreenplayDetails {
     screenwriter: string
 }
 
-export interface ScreenplayFormState {
-    details: ScreenplayDetails,
-    characters: string[],
-    sources: Films
+// export interface ScreenplayFormState {
+//     details: ScreenplayDetails,
+//     characters: string[],
+//     sources: Films
+// }
+
+// Reducers
+export type Reducer<S, A> = (prevState: S, action: A) => S;
+
+export interface Action {
+  readonly type: string,
+  readonly [key: string]: any
 }
 

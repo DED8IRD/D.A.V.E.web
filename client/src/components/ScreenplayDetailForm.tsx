@@ -1,5 +1,8 @@
 // ScreenplayDetailForm.tsx
-import React from 'react';
+import React, {
+  useContext
+} from 'react';
+import {ScreenplayFormContext} from '../utils/contexts'
 import {
   Grid,
   Typography,
@@ -8,6 +11,7 @@ import {
 
 
 const ScreenplayDetailForm: React.FC = () => {
+  const ctx = useContext(ScreenplayFormContext)
   return (
     <React.Fragment>
       <Typography variant="h5" align="center" gutterBottom>

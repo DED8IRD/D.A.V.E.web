@@ -1,4 +1,6 @@
-import React from "react";
+import React, {
+  useContext
+} from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import {
   Paper,
@@ -10,6 +12,7 @@ import {
   Typography
 } from "@material-ui/core";
 
+import {StoreProvider} from '../utils/contexts'
 import ScreenplayDetailForm from './ScreenplayDetailForm' 
 import CharacterForm from './CharacterForm' 
 import SourceForm from './SourceForm' 
@@ -77,6 +80,7 @@ const ScreenplayForm: React.FC = () => {
   const handleBack = () => setActiveStep(activeStep - 1)
 
   return (
+    <StoreProvider>
      <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
@@ -127,6 +131,7 @@ const ScreenplayForm: React.FC = () => {
           </React.Fragment>                 
         </Paper>
       </main>
+    </StoreProvider>
   );
 };
 
