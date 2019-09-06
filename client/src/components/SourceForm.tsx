@@ -1,5 +1,6 @@
 // SourceForm.tsx
 import React, {
+  useContext,  
   useState,
   useEffect,
   ChangeEvent,
@@ -20,6 +21,7 @@ import {
 } from "@material-ui/core";
 import {makeStyles, createStyles, Theme} from "@material-ui/core/styles"
 import { Film, Films } from '../utils/types'
+import {ScreenplayFormContext} from '../utils/contexts'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,8 +36,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
 const SourceForm: React.FC = (props: any) => {
+  const ctx = useContext(ScreenplayFormContext)
+
   const [films, setFilms] = useState<Films>({})
   const [searchResults, setSearchResults] = useState<Films>({})
   const [selected, setSelected] = useState<Films>({})
@@ -51,13 +54,13 @@ const SourceForm: React.FC = (props: any) => {
   };
 
   useEffect((): void => {
-    if (Object.keys(films).length === 0) getFilms();
-  });
+    getFilms();
+  }, []);
 
   useEffect((): void => {
     const size = Object.keys(selected).length
     setError(err => 5 < size || size < 1)
-  })
+  }, [selected])
 
   const search = (query: string) => {
     const results: Films = {} 
