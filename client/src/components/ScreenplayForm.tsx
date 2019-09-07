@@ -110,7 +110,7 @@ const ScreenplayForm: React.FC = () => {
       }
     }
   };
-  useEffect((): any => submitForm(), [submitted]);
+  useEffect((): any => {submitForm()}, [submitted]);
 
   return (
     <Context.Provider value={{ state, dispatch }}>
