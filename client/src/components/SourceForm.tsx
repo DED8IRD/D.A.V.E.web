@@ -21,7 +21,6 @@ import {
 } from "@material-ui/core";
 import {makeStyles, createStyles, Theme} from "@material-ui/core/styles"
 import { Film, Films } from '../utils/types'
-import {ScreenplayFormContext} from '../utils/contexts'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,8 +36,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const SourceForm: React.FC = () => {
-  const ctx = useContext(ScreenplayFormContext)
-
   const [films, setFilms] = useState<Films>({})
   const [searchResults, setSearchResults] = useState<Films>({})
   const [selected, setSelected] = useState<Films>({})
@@ -100,7 +97,7 @@ const SourceForm: React.FC = () => {
   const classes = useStyles()
 
   return (
-    <React.Fragment>
+    <>
       <Paper className={classes.paper}>
         <Input 
           type='search'
@@ -144,7 +141,7 @@ const SourceForm: React.FC = () => {
             </FormControl>
         ))}
       </FormControl>
-    </React.Fragment>
+    </>
   );
 };
 

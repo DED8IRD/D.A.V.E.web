@@ -2,7 +2,6 @@
 import React, {
   useContext
 } from 'react';
-import {ScreenplayFormContext} from '../utils/contexts'
 import {
   Grid,
   Typography,
@@ -11,9 +10,8 @@ import {
 
 
 const ScreenplayDetailForm: React.FC = () => {
-  const ctx = useContext(ScreenplayFormContext)
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h5" align="center" gutterBottom>
         Screenplay Details
       </Typography>
@@ -35,7 +33,7 @@ const ScreenplayDetailForm: React.FC = () => {
           />
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   )
 }
 

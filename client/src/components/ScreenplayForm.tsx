@@ -1,5 +1,5 @@
 import React, {
-  useContext
+  createContext, useContext, useReducer
 } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import {
@@ -12,7 +12,8 @@ import {
   Typography
 } from "@material-ui/core";
 
-import {StoreProvider} from '../utils/contexts'
+import {State, Action, ScreenplayContext} from '../utils/types'
+import {reducer} from '../utils/reducers'
 import ScreenplayDetailForm from './ScreenplayDetailForm' 
 import CharacterForm from './CharacterForm' 
 import SourceForm from './SourceForm' 
@@ -58,29 +59,39 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const steps = ['Details', 'Characters', 'Sources'];
-
-function getStepContent(step: number) {
-  switch (step) {
-    case 0:
-      return <ScreenplayDetailForm />;
-    case 1:
-      return <CharacterForm />;
-    case 2:
-      return <SourceForm />;
-    default:
-      throw new Error('Unknown step');
-  }
-}
+const initialForm: State = {
+  title: '',
+  screenwriter: '',
+  characters: [],
+  sources: {}
+}  
+export const Context = createContext({
+  state: initialForm,
+  dispatch: (action: Action) => {}
+})
 
 const ScreenplayForm: React.FC = () => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
+  const steps = ['Details', 'Characters', 'Sources'];
+  const getStepContent = (step: number) => {
+    switch (step) {
+      case 0:
+        return <ScreenplayDetailForm />;
+      case 1:
+        return <CharacterForm />;
+      case 2:
+        return <SourceForm />;
+      default:
+        throw new Error('Unknown step');
+    }
+  }
   const handleNext = () => setActiveStep(activeStep + 1)
   const handleBack = () => setActiveStep(activeStep - 1)
+  const [state, dispatch] = useReducer(reducer, initialForm)
 
   return (
-    <StoreProvider>
+    <Context.Provider value={{state, dispatch}}>
      <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
@@ -131,7 +142,7 @@ const ScreenplayForm: React.FC = () => {
           </React.Fragment>                 
         </Paper>
       </main>
-    </StoreProvider>
+    </Context.Provider>
   );
 };
 

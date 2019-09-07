@@ -16,7 +16,6 @@ import {
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import {ScreenplayFormContext} from '../utils/contexts'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,7 +40,6 @@ interface CharacterChipProps {
 
 const CharacterChipArray: React.FC<CharacterChipProps> = ({chips, handleDelete}) => {
   const classes = useStyles();
-  const {characters} = useContext(ScreenplayFormContext)
   return (
     <Paper className={classes.paper}>
       {chips.map((chip: string, i: number) => {
@@ -77,7 +75,7 @@ const CharacterForm: React.FC = () => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h5" align="center" gutterBottom>
         Add characters
       </Typography>
@@ -106,7 +104,7 @@ const CharacterForm: React.FC = () => {
           handleDelete={handleDelete}
         />
       }
-    </React.Fragment>
+    </>
   )
 }
 
