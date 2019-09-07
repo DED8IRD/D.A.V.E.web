@@ -1,13 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
+import json
 import os
 
 from DAVE.nlp.Stanley import Stanley as Director
 
 def screenwrite(request):
-    genres = ['western']
-    characters = ['bob', 'bobby', 'bobra', 'bobert']
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        title = data['title'] or 'Untitled'
+        author = data['screenwriter'] or 'Anonymous'
+        characters = data['characters']
+        sources = ['sources']
+        print(title, author, characters, sources)
+        return JsonResponse(data)
+
     source = f'{settings.BASE_DIR}/{settings.STATIC_URL}/nlp/markov_models'
     director = Director(genres, characters, source)
     director.direct()

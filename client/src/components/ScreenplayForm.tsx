@@ -1,6 +1,4 @@
-import React, {
-  createContext, useReducer
-} from "react";
+import React, { createContext, useReducer, useEffect, useState } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import {
   Paper,
@@ -10,12 +8,16 @@ import {
   Button,
   Typography
 } from "@material-ui/core";
+import axios from "axios";
 
-import {State, Action, ScreenplayContext} from '../utils/types'
-import {reducer} from '../utils/reducers'
-import ScreenplayDetailForm from './ScreenplayDetailForm' 
-import CharacterForm from './CharacterForm' 
-import SourceForm from './SourceForm' 
+import { State, Action, ScreenplayContext } from "../utils/types";
+import { reducer } from "../utils/reducers";
+import ScreenplayDetailForm from "./ScreenplayDetailForm";
+import CharacterForm from "./CharacterForm";
+import SourceForm from "./SourceForm";
+
+axios.defaults.xsrfCookieName = "csrftoken";
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
 const useStyles = makeStyles((theme: Theme) => ({
   layout: {
@@ -59,20 +61,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const initialForm: State = {
-  title: '',
-  screenwriter: '',
+  title: "",
+  screenwriter: "",
   characters: [],
   sources: {}
-}  
+};
 export const Context = createContext({
   state: initialForm,
   dispatch: (action: Action) => {}
-})
+});
 
 const ScreenplayForm: React.FC = () => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const steps = ['Details', 'Characters', 'Sources'];
+  const [state, dispatch] = useReducer(reducer, initialForm);
+  const [activeStep, setActiveStep] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+  const steps = ["Details", "Characters", "Sources"];
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
@@ -82,16 +86,35 @@ const ScreenplayForm: React.FC = () => {
       case 2:
         return <SourceForm />;
       default:
-        throw new Error('Unknown step');
+        throw new Error("Unknown step");
     }
-  }
-  const handleNext = () => setActiveStep(activeStep + 1)
-  const handleBack = () => setActiveStep(activeStep - 1)
-  const [state, dispatch] = useReducer(reducer, initialForm)
+  };
+  const handleNext = () => setActiveStep(activeStep + 1);
+  const handleBack = () => setActiveStep(activeStep - 1);
+  useEffect(() => {
+    if (activeStep === steps.length) {
+      setSubmitted(true);
+    }
+  }, [activeStep]);
+
+  const submitForm = async () => {
+    if (submitted) {
+      try {
+        const res = await axios.post(
+          "http://localhost:8000/screenwrite/",
+          state
+        );
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+  useEffect((): any => submitForm(), [submitted]);
 
   return (
-    <Context.Provider value={{state, dispatch}}>
-     <main className={classes.layout}>
+    <Context.Provider value={{ state, dispatch }}>
+      <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
             Screenplay Generator
@@ -102,7 +125,7 @@ const ScreenplayForm: React.FC = () => {
                 <StepLabel>{label}</StepLabel>
               </Step>
             ))}
-          </Stepper> 
+          </Stepper>
           <React.Fragment>
             {activeStep === steps.length ? (
               <React.Fragment>
@@ -110,7 +133,8 @@ const ScreenplayForm: React.FC = () => {
                   Generating your screenplay...
                 </Typography>
                 <Typography variant="subtitle1">
-                  D.A.V.E. is busy writing your screenplay. We will notify you when your files are ready.
+                  D.A.V.E. is busy writing your screenplay. We will notify you
+                  when your files are ready.
                 </Typography>
               </React.Fragment>
             ) : (
@@ -118,10 +142,10 @@ const ScreenplayForm: React.FC = () => {
                 {getStepContent(activeStep)}
                 <div className={classes.buttons}>
                   {activeStep !== 0 && (
-                    <Button 
-                      variant='contained'
-                      color='secondary'
-                      onClick={handleBack} 
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={handleBack}
                       className={classes.button}
                     >
                       Back
@@ -133,12 +157,12 @@ const ScreenplayForm: React.FC = () => {
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {activeStep === steps.length - 1 ? 'Generate' : 'Next'}
+                    {activeStep === steps.length - 1 ? "Generate" : "Next"}
                   </Button>
                 </div>
               </React.Fragment>
             )}
-          </React.Fragment>                 
+          </React.Fragment>
         </Paper>
       </main>
     </Context.Provider>
