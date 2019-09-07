@@ -8,19 +8,19 @@ import React, {
 import axios from "axios";
 import {
   Paper,
-  FormLabel,
   FormControl,
-  FormGroup,
   FormControlLabel,
   FormHelperText,
   Input,
-  TextField,
   Checkbox,
   Typography,
   Chip,
 } from "@material-ui/core";
 import {makeStyles, createStyles, Theme} from "@material-ui/core/styles"
+
 import { Film, Films } from '../utils/types'
+import {Context} from './ScreenplayForm'
+import {addSource, removeSource} from '../utils/reducers'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,8 +38,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const SourceForm: React.FC = () => {
   const [films, setFilms] = useState<Films>({})
   const [searchResults, setSearchResults] = useState<Films>({})
-  const [selected, setSelected] = useState<Films>({})
   const [error, setError] = useState<boolean>(false)
+  const {state, dispatch} = useContext(Context)
 
   const getFilms = async () => {
     try {
@@ -55,9 +55,9 @@ const SourceForm: React.FC = () => {
   }, []);
 
   useEffect((): void => {
-    const size = Object.keys(selected).length
+    const size = Object.keys(state.sources).length
     setError(err => 5 < size || size < 1)
-  }, [selected])
+  }, [state.sources])
 
   const search = (query: string) => {
     const results: Films = {} 
@@ -77,20 +77,16 @@ const SourceForm: React.FC = () => {
   }
 
   const handleDelete = (title: string) => () => {
-    const copy = {...selected}
-    delete copy[title]
-    setSelected(selected => copy) 
+    dispatch(removeSource(title)) 
   };
 
   const handleSelect = (event: ChangeEvent<HTMLInputElement>): void => {
     const title: string = event.currentTarget.value
-    if (!selected[title]) {
+    if (!state.sources[title]) {
       const film: Film = {...searchResults[title], title}
-      setSelected(selected => ({...selected, [title]: film}))
+      dispatch(addSource(film))
     } else {
-      const copy = {...selected}
-      delete copy[title]
-      setSelected(selected => copy)   
+      dispatch(removeSource(title)) 
     }
   }
 
@@ -108,7 +104,7 @@ const SourceForm: React.FC = () => {
         />
       </Paper>
       <Paper className={classes.paper}>
-        {Object.keys(selected).map((title: string) => (
+        {Object.keys(state.sources).map((title: string) => (
           <Chip 
             key={title}
             label={title}
@@ -128,7 +124,7 @@ const SourceForm: React.FC = () => {
               <FormControlLabel
                 control={
                   <Checkbox 
-                    checked={Boolean(selected[film])}
+                    checked={Boolean(state.sources[film])}
                     onChange={handleSelect}
                     value={film}
                   />

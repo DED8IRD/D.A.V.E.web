@@ -1,10 +1,9 @@
 import React, {
-  createContext, useContext, useReducer
+  createContext, useReducer
 } from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import {
   Paper,
-  Grid,
   Stepper,
   Step,
   StepLabel,

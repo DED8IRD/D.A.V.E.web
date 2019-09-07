@@ -1,6 +1,6 @@
 // CharacterForm.tsx
 import React, {
-  useContext,  
+  useContext,
   useState,
   ChangeEvent,
   FormEvent,
@@ -16,6 +16,9 @@ import {
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+
+import {Context} from './ScreenplayForm'
+import {addCharacter, removeCharacter} from '../utils/reducers'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,11 +60,11 @@ const CharacterChipArray: React.FC<CharacterChipProps> = ({chips, handleDelete})
 }
 
 const CharacterForm: React.FC = () => {
-  const [chips, setChips] = React.useState<string[]>([])
+  const {state, dispatch} = useContext(Context)
   const [character, setCharacter] = useState<string>('')
 
   const handleDelete = (index: number) => () => {
-    setChips(chips.filter((chip: string, i: number) => i !== index))
+    dispatch(removeCharacter(index))
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -70,7 +73,7 @@ const CharacterForm: React.FC = () => {
 
   const handleAdd = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
-    setChips([...chips, character])
+    dispatch(addCharacter(character))
     setCharacter('')
   }
 
@@ -98,9 +101,9 @@ const CharacterForm: React.FC = () => {
           }}              
         />
       </form>
-      {chips.length > 0 && 
+      {state.characters.length > 0 && 
         <CharacterChipArray 
-          chips={chips}
+          chips={state.characters}
           handleDelete={handleDelete}
         />
       }
