@@ -15,10 +15,12 @@ export const initialForm = {
 }
 
 export type State = typeof initialForm
+export interface ContainerComponentProps {
+  children?: React.ReactNode
+}
 
-export const ScreenplayFormContext = React.createContext<any>(initialForm)
-
-export const StoreProvider: React.FC<any> = ({ children }) => {
+export const ScreenplayFormContext = React.createContext<State>(initialForm)
+export const StoreProvider: React.FC = ({ children }: ContainerComponentProps) => {
   return (
     <ScreenplayFormContext.Provider value={initialForm}>
       {children}

@@ -27,7 +27,7 @@ export const removeSource = (title: string): Action => ({
 }) 
 
 // REDUCERS
-export const reducer = (state: State, action: Action) =>{
+export const reducer = (state: Partial<State>, action: Action) =>{
   switch (action.type) {
     case ADD_CHARACTER:
       return {characters: [...state.characters, action.character]}
