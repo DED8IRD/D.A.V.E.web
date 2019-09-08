@@ -2,7 +2,7 @@
 // SourceForm
 export interface Film {
   title?: string;
-  path: string;
+  id: number;
   genre: string[];
 }
 
