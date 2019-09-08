@@ -1,5 +1,7 @@
 # # Custom ----------------------------------------------------------------- #
+models/
 markov_models/
+parsed/
 parsed_categories/
 Genres/
 
