@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 import json
 import os
+import tempfile
 
 from DAVE.nlp.Stanley import Stanley as Director
 
@@ -12,13 +13,18 @@ def screenwrite(request):
         title = data['title'] or 'Untitled'
         author = data['screenwriter'] or 'Anonymous'
         characters = data['characters']
-        sources = ['sources']
-        print(title, author, characters, sources)
+        films = data['sources']
+        sources = [film['path'] for title, film in films.items()]
+        temp_dir = tempfile.TemporaryDirectory()
+        director = Director(
+            sources, 
+            characters, 
+            destination=temp_dir.name, 
+            title=title,
+            author=author)
+        director.direct(length=100)
         return JsonResponse(data)
 
-    source = f'{settings.BASE_DIR}/{settings.STATIC_URL}/nlp/markov_models'
-    director = Director(genres, characters, source)
-    director.direct()
     return HttpResponse('ok')
 
 def source_screenplays(request):
