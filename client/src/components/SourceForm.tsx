@@ -15,7 +15,9 @@ import {
 } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search'
 import MenuIcon from '@material-ui/icons/Menu'
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import Dropzone from 'react-dropzone'
 
 import { Film, Films } from "../utils/types";
 import { Context } from "./ScreenplayForm";
@@ -113,13 +115,19 @@ const SourceForm: React.FC = () => {
         </IconButton>
       </Paper>
       <Typography variant={'subtitle2'} align='center'>or</Typography>
-      <Paper>
-        <Input
-          type="file"
-          inputProps={{ "aria-label": "upload screenplays" }}
-          fullWidth
-        />
-      </Paper>
+      <Dropzone
+        onDrop={acceptedFiles => console.log(acceptedFiles)}
+        accept='text/plain'
+      >
+        {({getRootProps, getInputProps}) => (
+          <section>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              <InsertDriveFileIcon />
+            </div>
+          </section>
+        )}
+      </Dropzone>
       {state.sources.length && (
         <Paper className={classes.paper}>
           {Object.keys(state.sources).map((title: string) => (
