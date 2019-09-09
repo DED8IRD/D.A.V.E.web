@@ -7,10 +7,14 @@ import {
   FormControlLabel,
   FormHelperText,
   Input,
+  InputBase,
+  IconButton,
   Checkbox,
   Typography,
   Chip
 } from "@material-ui/core";
+import SearchIcon from '@material-ui/icons/Search'
+import MenuIcon from '@material-ui/icons/Menu'
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 import { Film, Films } from "../utils/types";
@@ -19,6 +23,10 @@ import { addSource, removeSource } from "../utils/reducers";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    search: {
+      marginLeft: theme.spacing(1),
+      flex: 1
+    },
     paper: {
       display: "flex",
       flexWrap: "wrap",
@@ -51,7 +59,7 @@ const SourceForm: React.FC = () => {
 
   useEffect((): void => {
     const size = Object.keys(state.sources).length;
-    setError(err => 5 < size || size < 1);
+    setError(err => 20 < size || size < 3);
   }, [state.sources]);
 
   const search = (query: string) => {
@@ -90,21 +98,37 @@ const SourceForm: React.FC = () => {
   return (
     <>
       <Paper className={classes.paper}>
-        <Input
-          type="search"
+        <IconButton aria-label="menu">
+          <MenuIcon />
+        </IconButton>
+        <InputBase
+          className={classes.search}
           placeholder="Search films"
-          inputProps={{ "aria-label": "search films" }}
+          inputProps={{ 'aria-label': 'search films' }}
           onChange={handleChange}
+          fullWidth          
+        />
+        <IconButton aria-label="search">
+          <SearchIcon />
+        </IconButton>
+      </Paper>
+      <Typography variant={'subtitle2'} align='center'>or</Typography>
+      <Paper>
+        <Input
+          type="file"
+          inputProps={{ "aria-label": "upload screenplays" }}
           fullWidth
         />
       </Paper>
-      <Paper className={classes.paper}>
-        {Object.keys(state.sources).map((title: string) => (
-          <Chip key={title} label={title} onDelete={handleDelete(title)} />
-        ))}
-      </Paper>
+      {state.sources.length && (
+        <Paper className={classes.paper}>
+          {Object.keys(state.sources).map((title: string) => (
+            <Chip key={title} label={title} onDelete={handleDelete(title)} />
+          ))}
+        </Paper>
+      )}
       <FormControl error={error} component="fieldset" required fullWidth>
-        <FormHelperText>Choose from one to five screenplays.</FormHelperText>
+        <FormHelperText>Choose 3 to 20 screenplays.</FormHelperText>
         {Object.keys(searchResults).map((film: string) => (
           <FormControl key={film} fullWidth>
             <FormControlLabel
