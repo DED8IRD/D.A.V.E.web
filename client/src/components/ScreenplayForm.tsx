@@ -10,11 +10,12 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 
-import { State, Action, ScreenplayContext } from "../utils/types";
+import { State, Action, ScreenplayContext, Generated } from "../utils/types";
 import { reducer } from "../utils/reducers";
 import ScreenplayDetailForm from "./ScreenplayDetailForm";
 import CharacterForm from "./CharacterForm";
 import SourceForm from "./SourceForm";
+import GeneratedScreenplay from "./GeneratedScreenplay";
 
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -66,6 +67,7 @@ const initialForm: State = {
   characters: [],
   sources: {}
 };
+
 export const Context = createContext({
   state: initialForm,
   dispatch: (action: Action) => {}
@@ -74,8 +76,10 @@ export const Context = createContext({
 const ScreenplayForm: React.FC = () => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initialForm);
-  const [activeStep, setActiveStep] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
+  const [activeStep, setActiveStep] = useState<number>(0);
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [screenplay, setScreenplay] = useState<Generated>({pdf: '', plaintext: ''})
   const steps = ["Details", "Characters", "Sources"];
   const getStepContent = (step: number) => {
     switch (step) {
@@ -98,6 +102,7 @@ const ScreenplayForm: React.FC = () => {
   }, [activeStep]);
 
   const submitForm = async () => {
+    setIsLoading(true)
     if (submitted) {
       try {
         const res = await axios.post(
@@ -105,12 +110,20 @@ const ScreenplayForm: React.FC = () => {
           state
         );
         console.log(res);
+        const data: Generated = res.data.generated
+        setScreenplay(data)
+        console.log(screenplay);
       } catch (err) {
         console.log(err);
       }
     }
+    setIsLoading(false)
   };
-  useEffect((): any => {submitForm()}, [submitted]);
+
+  useEffect((): any => {
+    submitForm()
+    setIsLoading(false)
+  }, [submitted]);
 
   return (
     <Context.Provider value={{ state, dispatch }}>
@@ -126,19 +139,26 @@ const ScreenplayForm: React.FC = () => {
               </Step>
             ))}
           </Stepper>
-          <React.Fragment>
+          <>
             {activeStep === steps.length ? (
-              <React.Fragment>
-                <Typography variant="h5" gutterBottom>
-                  Generating your screenplay...
-                </Typography>
-                <Typography variant="subtitle1">
-                  D.A.V.E. is busy writing your screenplay. We will notify you
-                  when your files are ready.
-                </Typography>
-              </React.Fragment>
+              isLoading ? (
+                <>
+                  <Typography variant="h5" gutterBottom>
+                    Generating your screenplay...
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    D.A.V.E. is busy writing your screenplay. 
+                    Your files will be available to download when they are ready.
+                  </Typography>
+                </>
+              ) : (
+                <GeneratedScreenplay 
+                  pdf={screenplay.pdf} 
+                  txt={screenplay.plaintext} 
+                />
+              )
             ) : (
-              <React.Fragment>
+              <>
                 {getStepContent(activeStep)}
                 <div className={classes.buttons}>
                   {activeStep !== 0 && (
@@ -160,9 +180,9 @@ const ScreenplayForm: React.FC = () => {
                     {activeStep === steps.length - 1 ? "Generate" : "Next"}
                   </Button>
                 </div>
-              </React.Fragment>
+              </>
             )}
-          </React.Fragment>
+          </>
         </Paper>
       </main>
     </Context.Provider>

@@ -115,26 +115,11 @@ const SourceForm: React.FC = () => {
         </IconButton>
       </Paper>
       <Typography variant={'subtitle2'} align='center'>or</Typography>
-      <Dropzone
-        onDrop={acceptedFiles => console.log(acceptedFiles)}
-        accept='text/plain'
-      >
-        {({getRootProps, getInputProps}) => (
-          <section>
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              <InsertDriveFileIcon />
-            </div>
-          </section>
-        )}
-      </Dropzone>
-      {state.sources.length && (
-        <Paper className={classes.paper}>
-          {Object.keys(state.sources).map((title: string) => (
-            <Chip key={title} label={title} onDelete={handleDelete(title)} />
-          ))}
-        </Paper>
-      )}
+      <Paper className={classes.paper}>
+        {Object.keys(state.sources).map((title: string) => (
+          <Chip key={title} label={title} onDelete={handleDelete(title)} />
+        ))}
+      </Paper>
       <FormControl error={error} component="fieldset" required fullWidth>
         <FormHelperText>Choose 3 to 20 screenplays.</FormHelperText>
         {Object.keys(searchResults).map((film: string) => (

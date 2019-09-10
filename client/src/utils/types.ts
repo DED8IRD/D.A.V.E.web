@@ -31,3 +31,9 @@ export interface ScreenplayContext {
 export interface ContainerComponentProps {
   children?: React.ReactNode;
 }
+
+// Screenplay gen response
+export interface Generated {
+  pdf: string,
+  plaintext: string
+}

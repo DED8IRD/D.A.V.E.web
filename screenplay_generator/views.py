@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 from django.conf import settings
 import json
 import os
@@ -10,25 +10,28 @@ from DAVE.nlp.Stanley import Stanley as Director
 def screenwrite(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        title = data['title'] or 'Untitled'
+        title = data['title'].replace(':', '-') or 'Untitled'
         author = data['screenwriter'] or 'Anonymous'
         characters = data['characters']
         films = data['sources']
         sources = [get_object_or_404(Film, pk=film['id']).file.path 
                    for title, film in films.items()]
-        temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp')
-        if not os.path.exists(temp_dir):
-            os.makedirs(temp_dir)
+
+        temp_dir = 'temp'
+        destination = os.path.join(settings.MEDIA_ROOT, temp_dir)
         director = Director(
             sources, 
             characters, 
-            destination=temp_dir, 
+            destination=destination, 
             title=title,
             author=author)
         director.direct(length=100)
+        data['generated'] = {
+            'pdf': f'{settings.MEDIA_URL}{temp_dir}/{title}.pdf',
+            'plaintext': f'{settings.MEDIA_URL}{temp_dir}/{title}.txt',
+        }
         return JsonResponse(data)
-
-    return HttpResponse('ok')
+    return HttpResponse(status=400)
 
 
 def source_screenplays(request):
