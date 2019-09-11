@@ -17,7 +17,7 @@ def screenwrite(request):
         sources = [get_object_or_404(Film, pk=film['id']).file.path 
                    for title, film in films.items()]
 
-        temp_dir = 'temp'
+        temp_dir = os.path.join('gen', 'temp')
         destination = os.path.join(settings.MEDIA_ROOT, temp_dir)
         director = Director(
             sources, 
@@ -47,7 +47,7 @@ def source_screenplays(request):
 
 
 def raw_path_api(request):
-    root = f'{settings.STATIC_URL}scraper/Genres'
+    root = f'{settings.STATIC_URL}sources/Genres'
     source = f'{settings.BASE_DIR}/{root}'
     films = {}
     for genre_dir in os.listdir(source):
