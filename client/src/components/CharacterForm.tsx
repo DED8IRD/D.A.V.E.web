@@ -30,13 +30,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface CharacterChipProps {
+interface ChipProps {
   chips: string[];
-  handleDelete: (index: number) => any;
+  handleDelete?: (index: number) => any;
   children?: React.ReactNode;
 }
 
-const CharacterChipArray: React.FC<CharacterChipProps> = ({
+export const ChipList: React.FC<ChipProps> = ({
   chips,
   handleDelete
 }) => {
@@ -48,7 +48,7 @@ const CharacterChipArray: React.FC<CharacterChipProps> = ({
           <Chip
             key={i}
             label={chip}
-            onDelete={handleDelete(i)}
+            onDelete={handleDelete && handleDelete(i)}
             className={classes.chip}
           />
         );
@@ -100,7 +100,7 @@ const CharacterForm: React.FC = () => {
         />
       </form>
       {state.characters.length > 0 && (
-        <CharacterChipArray
+        <ChipList
           chips={state.characters}
           handleDelete={handleDelete}
         />
