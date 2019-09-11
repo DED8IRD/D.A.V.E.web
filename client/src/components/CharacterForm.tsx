@@ -1,7 +1,6 @@
 // CharacterForm.tsx
 import React, { useContext, useState, ChangeEvent, FormEvent } from "react";
 import {
-  Grid,
   TextField,
   InputAdornment,
   IconButton,
@@ -22,10 +21,10 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       flexWrap: "wrap",
       padding: theme.spacing(0.5),
-      margin: theme.spacing(3)
-    },
-    chip: {
-      margin: theme.spacing(0.5)
+      margin: theme.spacing(3),
+      '& > *': {
+        margin: theme.spacing(0.5)
+      }
     }
   })
 );
@@ -36,30 +35,20 @@ interface ChipProps {
   children?: React.ReactNode;
 }
 
-export const ChipList: React.FC<ChipProps> = ({
-  chips,
-  handleDelete
-}) => {
-  const classes = useStyles();
+export const ChipList: React.FC<ChipProps> = ({ chips, handleDelete }) => {
   return (
-    <Paper className={classes.paper}>
-      {chips.map((chip: string, i: number) => {
-        return (
-          <Chip
-            key={i}
-            label={chip}
-            onDelete={handleDelete && handleDelete(i)}
-            className={classes.chip}
-          />
-        );
-      })}
-    </Paper>
+    <>
+      {chips.map((chip: string, i: number) => (
+        <Chip key={i} label={chip} onDelete={handleDelete && handleDelete(i)} />
+      ))}
+    </>
   );
 };
 
 const CharacterForm: React.FC = () => {
   const { state, dispatch } = useContext(Context);
   const [character, setCharacter] = useState<string>("");
+  const classes = useStyles();
 
   const handleDelete = (index: number) => () => {
     dispatch(removeCharacter(index));
@@ -100,10 +89,9 @@ const CharacterForm: React.FC = () => {
         />
       </form>
       {state.characters.length > 0 && (
-        <ChipList
-          chips={state.characters}
-          handleDelete={handleDelete}
-        />
+        <Paper className={classes.paper}>
+          <ChipList chips={state.characters} handleDelete={handleDelete} />
+        </Paper>
       )}
     </>
   );
