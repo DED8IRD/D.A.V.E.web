@@ -1,8 +1,9 @@
 import React from "react";
-import { Grid, ButtonGroup, Button } from "@material-ui/core";
+import { Grid, Typography, ButtonGroup, Button } from "@material-ui/core";
 import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import DescriptionIcon from "@material-ui/icons/Description";
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import { Generated } from '../utils/types'
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
@@ -15,11 +16,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 interface GeneratedProps {
-  pdf: string;
-  txt: string;
+  screenplay: Generated
 }
 
-const GeneratedScreenplay: React.FC<GeneratedProps> = ({ pdf, txt }) => {
+const GeneratedScreenplay: React.FC<GeneratedProps> = ({ screenplay }) => {
   const classes = useStyles()
 
   return (
@@ -28,7 +28,7 @@ const GeneratedScreenplay: React.FC<GeneratedProps> = ({ pdf, txt }) => {
         <ButtonGroup color='primary' aria-label="download screenplay button group" fullWidth>
           <Button
             target='_blank'
-            href={pdf}
+            href={screenplay.generated.pdf}
             aria-label='download screenplay as pdf'
             variant='contained' 
           >
@@ -37,7 +37,7 @@ const GeneratedScreenplay: React.FC<GeneratedProps> = ({ pdf, txt }) => {
           </Button>
           <Button
             target='_blank'
-            href={txt}
+            href={screenplay.generated.plaintext}
             aria-label='download screenplay as plaintext'
           >
             TXT
@@ -46,8 +46,8 @@ const GeneratedScreenplay: React.FC<GeneratedProps> = ({ pdf, txt }) => {
         </ButtonGroup>
       </Grid>
       <Grid item xs={12}>
-        <object data={pdf} type="application/pdf" className={classes.pdf}>
-          <embed src={pdf} type="application/pdf" className={classes.pdf} />
+        <object data={screenplay.generated.pdf} type="application/pdf" className={classes.pdf}>
+          <embed src={screenplay.generated.pdf} type="application/pdf" className={classes.pdf} />
         </object>
       </Grid>
     </Grid>

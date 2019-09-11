@@ -33,7 +33,11 @@ export interface ContainerComponentProps {
 }
 
 // Screenplay gen response
-export interface Generated {
+type GeneratedFiles = {
   pdf: string,
   plaintext: string
+}
+
+export interface Generated extends State {
+  generated: GeneratedFiles
 }

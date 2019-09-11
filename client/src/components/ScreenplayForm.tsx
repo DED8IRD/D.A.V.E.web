@@ -80,8 +80,11 @@ const ScreenplayForm: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [screenplay, setScreenplay] = useState<Generated>({
-    pdf: "",
-    plaintext: ""
+    ...initialForm,
+    generated: {
+      pdf: "",
+      plaintext: ""
+    }  
   });
   const steps = ["Details", "Characters", "Sources"];
   const getStepContent = (step: number) => {
@@ -113,7 +116,7 @@ const ScreenplayForm: React.FC = () => {
           state
         );
         console.log(res);
-        const data: Generated = res.data.generated;
+        const data: Generated = res.data;
         setScreenplay(data);
         console.log(screenplay);
       } catch (err) {
@@ -154,10 +157,7 @@ const ScreenplayForm: React.FC = () => {
                   </Typography>
                 </>
               ) : (
-                <GeneratedScreenplay
-                  pdf={screenplay.pdf}
-                  txt={screenplay.plaintext}
-                />
+                <GeneratedScreenplay screenplay={screenplay} />
               )
             ) : (
               <>
