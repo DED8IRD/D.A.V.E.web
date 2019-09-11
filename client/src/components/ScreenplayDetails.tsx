@@ -1,27 +1,31 @@
-import React from 'react';
+import React from "react";
 import {
   Grid,
   Typography,
   Card,
   CardContent,
-  TextField,
-} from "@material-ui/core"
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails
+} from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { ChipList } from "./CharacterForm";
 import { State } from "../utils/types";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    justify: 'center',
-    margin: theme.spacing(1),
-    '&>*': {
-      margin: theme.spacing(1)    
-    }
-  },
   card: {
-    width: '100%',
+    width: "100%",
     marginBottom: theme.spacing(4)
   },
+  flex: {
+    display: "flex",
+    flex: "row wrap",
+    justifyContent: "center",
+    "& > *": {
+      margin: theme.spacing(0.5)
+    }
+  }
 }));
 
 interface GeneratedProps {
@@ -34,40 +38,55 @@ const ScreenplayDetails: React.FC<GeneratedProps> = ({ screenplay }) => {
   return (
     <Card className={classes.card}>
       <CardContent>
-        <Typography className={classes.card} align='center'>
-          <Typography variant='h6' gutterBottom>
+        <Grid container className={classes.card} justify="center">
+          <Typography variant="h6" align="center" gutterBottom>
             Here is your bot-generated screenplay.
           </Typography>
-          <Typography variant='subtitle2'>
-          Made with 💖 and hopeful sentience from D.A.V.E.
+          <Typography variant="subtitle2" align="center">
+            Made with 💖 and hopeful sentience from D.A.V.E.
           </Typography>
-        </Typography>
-        <Grid container className={classes.root} justify='space-around'>
-          <TextField
-            value={screenplay.title}
-            label='Title'
-            variant='outlined'
-            disabled
-          />
-          <TextField
-            value={screenplay.screenwriter}
-            label='Screenwriter'
-            variant='outlined'
-            disabled
-          />
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant='h6' align='center'>
-            Characters
-          </Typography>
-          <ChipList chips={screenplay.characters} />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant='h6' align='center'>
-            Sources
-          </Typography>
-          <ChipList chips={Object.keys(screenplay.sources)} />
-        </Grid>          
+        <ExpansionPanel>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="screenplay-details"
+          >
+            <Typography>Details</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Grid container justify="center">
+              <Typography align="center">
+                {screenplay.title} by {screenplay.screenwriter}
+              </Typography>
+            </Grid>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <ExpansionPanel>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="character-list"
+          >
+            <Typography>Characters</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Grid container className={classes.flex}>
+              <ChipList chips={screenplay.characters} />
+            </Grid>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <ExpansionPanel>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="source-list"
+          >
+            <Typography>Sources</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Grid container className={classes.flex}>
+              <ChipList chips={Object.keys(screenplay.sources)} />
+            </Grid>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
       </CardContent>
     </Card>
   );

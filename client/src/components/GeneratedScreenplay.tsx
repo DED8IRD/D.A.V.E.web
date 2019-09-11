@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Grid,
-  ButtonGroup,
-  Button
-} from "@material-ui/core";
+import { Grid, ButtonGroup, Button } from "@material-ui/core";
 import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import DescriptionIcon from "@material-ui/icons/Description";
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -29,7 +25,16 @@ const GeneratedScreenplay: React.FC<GeneratedProps> = ({ screenplay }) => {
   screenplay = {
     title: "Star Wars",
     screenwriter: "Jorge Luke Us",
-    characters: ["Jar Jar Binks", "Jabba the Hut", "Tony #1", "Tony #2", "Tony #3", "Tony #4", "Tony #5", "Tony #6", ],
+    characters: [
+      "Jar Jar Binks",
+      "Jabba the Hut",
+      "Tony #1",
+      "Tony #2",
+      "Tony #3",
+      "Tony #4",
+      "Tony #5",
+      "Tony #6"
+    ],
     sources: {
       "Star Wars A New Hope": {
         genre: ["Action", "Fantasy", "Sci-Fi"],
