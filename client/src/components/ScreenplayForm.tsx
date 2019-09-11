@@ -76,7 +76,7 @@ export const Context = createContext({
 const ScreenplayForm: React.FC = () => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initialForm);
-  const [activeStep, setActiveStep] = useState<number>(0);
+  const [activeStep, setActiveStep] = useState<number>(3);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [screenplay, setScreenplay] = useState<Generated>({
@@ -162,28 +162,30 @@ const ScreenplayForm: React.FC = () => {
             ) : (
               <>
                 {getStepContent(activeStep)}
-                <div className={classes.buttons}>
-                  {activeStep !== 0 && (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={handleBack}
-                      className={classes.button}
-                    >
-                      Back
-                    </Button>
-                  )}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? "Generate" : "Next"}
-                  </Button>
-                </div>
               </>
             )}
+            <div className={classes.buttons}>
+              {activeStep !== 0 && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleBack}
+                  className={classes.button}
+                >
+                  Back
+                </Button>
+              )}
+              {activeStep < steps.length && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleNext}
+                  className={classes.button}
+                >
+                  {activeStep === steps.length - 1 ? "Generate" : "Next"}
+                </Button>
+              )}
+            </div>
           </>
         </Paper>
       </main>
