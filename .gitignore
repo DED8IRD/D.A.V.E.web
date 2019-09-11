@@ -4,7 +4,7 @@ markov_models/
 parsed/
 parsed_categories/
 Genres/
-
+*.sublime-workspace
 
 # # From template ---------------------------------------------------------- #
 # Byte-compiled / optimized / DLL files
@@ -204,4 +204,4 @@ typings/
 .fusebox/
 
 # DynamoDB Local files
-.dynamodb/
+.dynamodb/*
