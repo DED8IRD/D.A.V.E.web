@@ -6,8 +6,11 @@ import {
   Step,
   StepLabel,
   Button,
+  ButtonGroup,
   Typography
 } from "@material-ui/core";
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import axios from "axios";
 
 import { State, Action, ScreenplayContext, Generated } from "../utils/types";
@@ -45,16 +48,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3, 0, 5)
   },
   buttons: {
-    display: "flex",
-    justifyContent: "flex-end"
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: theme.spacing(2),
   },
   button: {
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1)
-  },
-  formControl: {
-    margin: theme.spacing(3),
-    padding: theme.spacing(3)
+    width: '100px',
   },
   textField: {
     margin: "dense"
@@ -76,7 +75,7 @@ export const Context = createContext({
 const ScreenplayForm: React.FC = () => {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initialForm);
-  const [activeStep, setActiveStep] = useState<number>(3);
+  const [activeStep, setActiveStep] = useState<number>(0);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [screenplay, setScreenplay] = useState<Generated>({
@@ -84,7 +83,7 @@ const ScreenplayForm: React.FC = () => {
     generated: {
       pdf: "",
       plaintext: ""
-    }  
+    }
   });
   const steps = ["Details", "Characters", "Sources"];
   const getStepContent = (step: number) => {
@@ -160,32 +159,31 @@ const ScreenplayForm: React.FC = () => {
                 <GeneratedScreenplay screenplay={screenplay} />
               )
             ) : (
-              <>
-                {getStepContent(activeStep)}
-              </>
+              <>{getStepContent(activeStep)}</>
             )}
-            <div className={classes.buttons}>
+            <ButtonGroup className={classes.buttons}>
               {activeStep !== 0 && (
                 <Button
-                  variant="contained"
-                  color="secondary"
                   onClick={handleBack}
                   className={classes.button}
+                  aria-label='Back'
                 >
-                  Back
+                  <ArrowBackIcon />
                 </Button>
               )}
               {activeStep < steps.length && (
                 <Button
-                  variant="contained"
-                  color="primary"
                   onClick={handleNext}
                   className={classes.button}
+                  aria-label='Next'
+                  color='primary'
                 >
-                  {activeStep === steps.length - 1 ? "Generate" : "Next"}
+                  {activeStep === steps.length-1 ?  "Generate" : (
+                    <ArrowForwardIcon />
+                  )}
                 </Button>
               )}
-            </div>
+            </ButtonGroup>
           </>
         </Paper>
       </main>
