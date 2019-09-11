@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: "wrap",
       padding: theme.spacing(0.5),
       margin: theme.spacing(3),
-      '& > *': {
+      "& > *": {
         margin: theme.spacing(0.5)
       }
     }
