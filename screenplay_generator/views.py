@@ -8,6 +8,9 @@ from .models import Film, Genre
 from DAVE.nlp.Stanley import Stanley as Director
 
 def screenwrite(request):
+    '''
+    Generates formatted screenplay as PDF and plaintext files
+    '''
     if request.method == 'POST':
         data = json.loads(request.body)
         title = data['title'].replace(':', '-') or 'Untitled'
@@ -35,6 +38,9 @@ def screenwrite(request):
 
 
 def source_screenplays(request):
+    '''
+    Serializes films
+    '''
     films = Film.objects.all()
     source = {}
     for film in films:
@@ -46,8 +52,11 @@ def source_screenplays(request):
     return JsonResponse(source)
 
 
-def raw_path_api(request):
-    root = f'{settings.STATIC_URL}sources/Genres'
+def raw_path_api(request, path):
+    '''
+    Serializes all files in path
+    '''
+    root = f'{settings.STATIC_URL}{path}'
     source = f'{settings.BASE_DIR}/{root}'
     films = {}
     for genre_dir in os.listdir(source):

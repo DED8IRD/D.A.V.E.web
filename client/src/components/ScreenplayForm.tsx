@@ -78,8 +78,11 @@ const ScreenplayForm: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialForm);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [screenplay, setScreenplay] = useState<Generated>({pdf: '', plaintext: ''})
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [screenplay, setScreenplay] = useState<Generated>({
+    pdf: "",
+    plaintext: ""
+  });
   const steps = ["Details", "Characters", "Sources"];
   const getStepContent = (step: number) => {
     switch (step) {
@@ -102,7 +105,7 @@ const ScreenplayForm: React.FC = () => {
   }, [activeStep]);
 
   const submitForm = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     if (submitted) {
       try {
         const res = await axios.post(
@@ -110,19 +113,18 @@ const ScreenplayForm: React.FC = () => {
           state
         );
         console.log(res);
-        const data: Generated = res.data.generated
-        setScreenplay(data)
+        const data: Generated = res.data.generated;
+        setScreenplay(data);
         console.log(screenplay);
       } catch (err) {
         console.log(err);
       }
     }
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   useEffect((): any => {
-    submitForm()
-    setIsLoading(false)
+    submitForm();
   }, [submitted]);
 
   return (
@@ -147,14 +149,14 @@ const ScreenplayForm: React.FC = () => {
                     Generating your screenplay...
                   </Typography>
                   <Typography variant="subtitle1">
-                    D.A.V.E. is busy writing your screenplay. 
-                    Your files will be available to download when they are ready.
+                    D.A.V.E. is busy writing your screenplay. Your files will be
+                    available to download when they are ready.
                   </Typography>
                 </>
               ) : (
-                <GeneratedScreenplay 
-                  pdf={screenplay.pdf} 
-                  txt={screenplay.plaintext} 
+                <GeneratedScreenplay
+                  pdf={screenplay.pdf}
+                  txt={screenplay.plaintext}
                 />
               )
             ) : (

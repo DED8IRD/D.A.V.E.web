@@ -13,11 +13,11 @@ import {
   Typography,
   Chip
 } from "@material-ui/core";
-import SearchIcon from '@material-ui/icons/Search'
-import MenuIcon from '@material-ui/icons/Menu'
-import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import SearchIcon from "@material-ui/icons/Search";
+import MenuIcon from "@material-ui/icons/Menu";
+import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import Dropzone from 'react-dropzone'
+import Dropzone from "react-dropzone";
 
 import { Film, Films } from "../utils/types";
 import { Context } from "./ScreenplayForm";
@@ -106,20 +106,24 @@ const SourceForm: React.FC = () => {
         <InputBase
           className={classes.search}
           placeholder="Search films"
-          inputProps={{ 'aria-label': 'search films' }}
+          inputProps={{ "aria-label": "search films" }}
           onChange={handleChange}
-          fullWidth          
+          fullWidth
         />
         <IconButton aria-label="search">
           <SearchIcon />
         </IconButton>
       </Paper>
-      <Typography variant={'subtitle2'} align='center'>or</Typography>
-      <Paper className={classes.paper}>
-        {Object.keys(state.sources).map((title: string) => (
-          <Chip key={title} label={title} onDelete={handleDelete(title)} />
-        ))}
-      </Paper>
+      <Typography variant={"subtitle2"} align="center">
+        or
+      </Typography>
+      {Object.keys(state.sources).length > 0 && (
+        <Paper className={classes.paper}>
+          {Object.keys(state.sources).map((title: string) => (
+            <Chip key={title} label={title} onDelete={handleDelete(title)} />
+          ))}
+        </Paper>
+      )}
       <FormControl error={error} component="fieldset" required fullWidth>
         <FormHelperText>Choose 3 to 20 screenplays.</FormHelperText>
         {Object.keys(searchResults).map((film: string) => (
