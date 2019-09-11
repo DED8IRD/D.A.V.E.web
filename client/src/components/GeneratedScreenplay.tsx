@@ -1,31 +1,16 @@
 import React from "react";
 import {
   Grid,
-  Typography,
-  Card,
-  CardContent,
-  TextField,
   ButtonGroup,
   Button
 } from "@material-ui/core";
 import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import DescriptionIcon from "@material-ui/icons/Description";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { ChipList } from "./CharacterForm";
 import { Generated } from "../utils/types";
+import ScreenplayDetails from "./ScreenplayDetails";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    justify: 'center',
-    margin: theme.spacing(1),
-    '&>*': {
-      margin: theme.spacing(1)    
-    }
-  },
-  card: {
-    width: '100%',
-    marginBottom: theme.spacing(4)
-  },
   icon: {
     marginLeft: theme.spacing(1)
   },
@@ -115,45 +100,8 @@ const GeneratedScreenplay: React.FC<GeneratedProps> = ({ screenplay }) => {
   };
 
   return (
-    <Grid container className={classes.root}>
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography className={classes.card} align='center'>
-            <Typography variant='h6' gutterBottom>
-              Here is your bot-generated screenplay.
-            </Typography>
-            <Typography variant='subtitle2'>
-            Made with 💖 and hopeful sentience from D.A.V.E.
-            </Typography>
-          </Typography>
-          <Grid container className={classes.root} justify='space-around'>
-            <TextField
-              value={screenplay.title}
-              label='Title'
-              variant='outlined'
-              disabled
-            />
-            <TextField
-              value={screenplay.screenwriter}
-              label='Screenwriter'
-              variant='outlined'
-              disabled
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant='h6' align='center'>
-              Characters
-            </Typography>
-            <ChipList chips={screenplay.characters} />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant='h6' align='center'>
-              Sources
-            </Typography>
-            <ChipList chips={Object.keys(screenplay.sources)} />
-          </Grid>          
-        </CardContent>
-      </Card>
+    <Grid container>
+      <ScreenplayDetails screenplay={screenplay} />
       <Grid item xs={12}>
         <ButtonGroup
           color="primary"
