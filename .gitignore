@@ -4,6 +4,7 @@ markov_models/
 parsed/
 parsed_categories/
 Genres/
+utils/
 *.sublime-workspace
 
 # # From template ---------------------------------------------------------- #
