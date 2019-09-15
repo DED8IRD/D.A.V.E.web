@@ -1,11 +1,8 @@
 # # Custom ----------------------------------------------------------------- #
 models/
-markov_models/
-parsed/
-parsed_categories/
-Genres/
+media/
 utils/
-*.sublime-workspace
+*.sublime*
 
 # # From template ---------------------------------------------------------- #
 # Byte-compiled / optimized / DLL files
