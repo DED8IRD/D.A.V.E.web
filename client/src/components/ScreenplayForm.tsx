@@ -111,7 +111,7 @@ const ScreenplayForm: React.FC = () => {
     if (submitted) {
       try {
         const res = await axios.post(
-          "http://localhost:8000/screenwrite/",
+          "/screenwrite/",
           state
         );
         console.log(res);

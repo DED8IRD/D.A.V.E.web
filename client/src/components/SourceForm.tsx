@@ -48,7 +48,7 @@ const SourceForm: React.FC = () => {
 
   const getFilms = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/sources/");
+      const response = await axios.get("/api/sources/");
       setFilms(films => response.data);
     } catch (err) {
       console.log(err);
