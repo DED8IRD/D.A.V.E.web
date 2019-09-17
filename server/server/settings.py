@@ -25,7 +25,7 @@ SECRET_KEY = KEYS['django']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.99.100']
+ALLOWED_HOSTS = ['server', '192.168.99.100']
 
 
 # Application definition
@@ -57,7 +57,7 @@ ROOT_URLCONF = 'server.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'client', 'build')],
+        'DIRS': [os.path.join(BASE_DIR, '..', 'client', 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
