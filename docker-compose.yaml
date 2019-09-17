@@ -3,12 +3,27 @@ version: '3'
 services:
   db:
     image: postgres
-  web:
-    build: .
+  server:
+    build: ./server/
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/dave
+      - ./server/:/server/
     ports:
       - "8000:8000"
     depends_on:
       - db
+  client:
+    build: ./client/
+    command: yarn start --watch
+    volumes: 
+      - ./client/:/client/
+      # One-way volume for node dependencies in image
+      - /client/node_modules
+    ports: 
+      - "3000:3000"
+    environment: 
+      - NODE_ENV=development  
+    depends_on:
+      - server
+volumes:
+  client:
