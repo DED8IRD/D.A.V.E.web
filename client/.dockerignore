@@ -8,10 +8,10 @@
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 **/build/Release
 # Dependency directories
-**/node_modules/
-**/jspm_packages/
+**/node_modules*
+**/jspm_packages*
 # TypeScript v1 declaration files
-**/typings/
+**/typings*
 # Optional npm cache directory
 **/.npm
 # Optional eslint cache
@@ -34,8 +34,8 @@
 # vuepress build output
 **/.vuepress/dist
 # Serverless directories
-**/.serverless/
+**/.serverless*
 # FuseBox cache
-**/.fusebox/
+**/.fusebox*
 # DynamoDB Local files
 **/.dynamodb/*
