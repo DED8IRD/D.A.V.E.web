@@ -1,5 +1,4 @@
-FROM node:8
-RUN mkdir /client/
+FROM node:8-alpine
 WORKDIR /client/
 COPY package.json yarn.lock /client/
 RUN yarn

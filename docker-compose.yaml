@@ -2,10 +2,12 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: postgres:alpine
   server:
     build: ./server/
     command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DJANGO_SETTINGS_MODULE=server.settings.development    
     volumes:
       - ./server/:/server/
     ports:
