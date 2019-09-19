@@ -1,7 +1,8 @@
 # # Custom ----------------------------------------------------------------- #
 **/models
 **/gen
-**/*.sublime
+**/nlp
+**/*sublime*
 **/.git
 # # From template ---------------------------------------------------------- #
 # Byte-compiled / optimized / DLL files
