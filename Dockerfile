@@ -1,17 +1,26 @@
 FROM python:3.6-alpine
 ENV PYTHONUNBUFFERED 1
 WORKDIR /server/
-COPY . /server/
+COPY ./server/requirements.txt /server/
+RUN \
+  apk add --no-cache postgresql-libs && \
+  apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
+  apk add --no-cache yarn && \
+  python -m pip install -r requirements.txt --no-cache-dir && \
+  apk --purge del .build-deps && \
+  export DJANGO_SETTINGS_MODULE=server.settings.production && \
+  export SECRET_KEY=$SECRET_KEY && \
+  export PORT=$PORT 
+COPY ./server/ /server/
 
-WORKDIR /client/
-COPY . /server/client/
-
+WORKDIR /server/client/
+COPY ./client/ /server/client/
+RUN \
+  yarn && \
+  yarn build
 WORKDIR /server/
-RUN pip install -r requirements.txt \
-  DJANGO_SETTINGS_MODULE=server.settings.production \
-  SECRET_KEY=$SECRET_KEY \
-  python server/manage.py collectstatic --noinput \
-  cd ./client/ \
-  yarn
+RUN \
+  python manage.py collectstatic --noinput && \
+  sh ./utils/init-db.sh
 EXPOSE $PORT
-CMD python server/manage.py runserver 0.0.0.0:$PORT
+CMD python /server/manage.py runserver 0.0.0.0:$PORT

@@ -1,5 +1,6 @@
 # # Custom ----------------------------------------------------------------- #
-**/models
+**/markov_models
+**/parsed_categories
 **/gen
 **/nlp
 **/*sublime*
