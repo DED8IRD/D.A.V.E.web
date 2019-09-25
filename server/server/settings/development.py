@@ -1,9 +1,10 @@
 # development.py
 from server.settings.base import *
-from utils.secrets import KEYS
+from .utils.secrets import KEYS
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = KEYS['django']
+print(SECRET_KEY)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = ['server', '192.168.99.100']
