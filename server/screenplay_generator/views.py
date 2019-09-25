@@ -1,11 +1,21 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse, FileResponse
 from django.conf import settings
+from django.views.generic.base import TemplateView
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
 import json
 import os
-
 from .models import Film, Genre
 from DAVE.nlp.Stanley import Stanley as Director
+
+class ClientRoute(TemplateView):
+    template_name = "index.html"
+
+    @method_decorator(ensure_csrf_cookie)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
 
 def screenwrite(request):
     '''
