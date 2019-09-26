@@ -1,3 +1,12 @@
+# Build client app
+FROM node:8-alpine as client-build
+WORKDIR /client/
+COPY ./client/package.json ./client/yarn.lock /client/
+RUN yarn
+COPY ./client/ /client/
+RUN yarn build
+
+# Build production environment
 FROM python:3.6-alpine
 ENV PYTHONUNBUFFERED 1
 WORKDIR /server/
@@ -10,15 +19,9 @@ RUN \
  apk --purge del .build-deps
 COPY ./server/ /server/
 
-WORKDIR /server/client/
-COPY ./client/ /server/client/
-RUN \
- yarn && \
- yarn build
+# Copy built assets from client app 
+COPY --from=client-build /client/build/ /server/client/build/
+
 WORKDIR /server/
-RUN \
- export DJANGO_SETTINGS_MODULE=server.settings.production && \
- python manage.py collectstatic --noinput && \
- sh ./utils/init-db.sh
-EXPOSE $PORT
+EXPOSE 8000
 CMD python /server/manage.py runserver 0.0.0.0:8000

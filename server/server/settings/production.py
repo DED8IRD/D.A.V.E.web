@@ -1,10 +1,10 @@
 # production.py
 from server.settings.base import *
-from .utils.secrets import KEYS
+from utils.secrets import KEYS
 
 SECRET_KEY = KEYS['django']
 DEBUG = False
-ALLOWED_HOSTS = ['server', '192.168.99.100']
+ALLOWED_HOSTS = ['server', '192.168.99.100', '192.168.99.101', '0.0.0.0']
 
 # Database
 DATABASES = {
